@@ -1,0 +1,43 @@
+<div>
+    <h2 mat-dialog-title>Novo Funcionario</h2>
+    <mat-spinner color="accent" mode="indeterminate" diameter="20" *ngIf="salvandoFuncionario"></mat-spinner>
+</div>
+<section mat-dialog-content>
+    <form action="" [formGroup]="formFuncionario" (ngSubmit)="salvar()">
+        <img [src]="fotoPreview" alt="" *ngIf="fotoPreview.length > 0">
+        <mat-form-field appearance="fill">
+            <mat-label>Nome</mat-label>
+            <input
+            type="text"
+            placeholder="Ex: João Pedro"
+            matInput
+            formControlName="nome"
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>E-mail</mat-label>
+            <input
+            type="email"
+            placeholder="Ex: SeuEmail@gmail.com"
+            matInput
+            formControlName="email"
+            >
+        </mat-form-field>
+        <input 
+        type="file"
+        accept="image/*"
+        id="file-input"
+        #fileInput
+        (change)="recuperarFoto($event)"
+        formControlName="foto"
+        >
+        <button
+        type="button"
+        mat-stroked-button
+        color="primary"
+        (click)="fileInput.click()"
+        >Selecione uma imagem</button>
+
+        <button type="submit"  [disabled]="formFuncionario.invalid" mat-raised-button color="accent" id="salvar" >Salvar</button>
+    </form>
+</section>
