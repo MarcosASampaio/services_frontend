@@ -71,7 +71,8 @@ import { MatTreeModule } from '@angular/material/tree'
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTreeModule
+    MatTreeModule,
+    MatCardModule
   ]
 })
 export class MaterialModule {
