@@ -6,9 +6,27 @@
 <ng-template #principal>
   
   <mat-card>
-    <button mat-icon-button color="primary" routerLink="/funcionarios" id="voltar">
-      <mat-icon>arrow_back</mat-icon>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>more_vert</mat-icon>
     </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item color="primary" routerLink="/funcionarios" id="voltar">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Voltar</span>
+      </button>
+
+        
+          <button mat-menu-item color="primary" (click)="deletarFuncionario(funcionario)">
+            <mat-icon>delete</mat-icon>
+            <span>Excluir</span>
+          </button>
+
+    </mat-menu>
+
+    <!-- <button mat-icon-button color="primary" routerLink="/funcionarios" id="voltar">
+      <mat-icon>arrow_back</mat-icon>
+    </button> -->
     <mat-card-header class="top">
       <img class="foto" [src]="funcionario.foto || '/assets/Foto.jpg'"  alt="" mat-card-avatar>
       <mat-card-title>{{ funcionario.nome }}</mat-card-title>

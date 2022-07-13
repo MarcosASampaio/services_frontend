@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, mergeMap, Observable } from 'rxjs';
+import { BehaviorSubject, map, mergeMap, Observable, tap } from 'rxjs';
 import { Funcionario } from '../models/funcionario';
 import { AngularFireStorage } from '@angular/fire/compat/storage'; //importação do fireStorage
 import { async } from '@firebase/util';
@@ -13,6 +13,8 @@ import { async } from '@firebase/util';
 export class FuncionarioService {
 
   private readonly baseUrl: string = 'http://localhost:3000/funcionarios'
+
+  atualizarFuncionariosSub$: BehaviorSubject<boolean> = new BehaviorSubject(true)
 
   constructor(
     private http: HttpClient,
@@ -90,7 +92,11 @@ export class FuncionarioService {
     //se a foto não foi passada, atualizar apena com os dados básicos
 
     if (foto == undefined){
-    return this.http.put<Funcionario>(`${this.baseUrl}/${func.id}`, func)
+    return this.http.put<Funcionario>(`${this.baseUrl}/${func.id}`, func).pipe(
+      tap((funcionario)=>{
+        this.atualizarFuncionariosSub$.next(true)
+      })
+    )
     }
 
     //se já existir uma foto ligada a esse funcionário, iremos deletá-la para pôr a nova
@@ -110,6 +116,9 @@ export class FuncionarioService {
         funcionarioAtualizado.foto = linkFotoFirebase
 
         return this.atualizarFuncionario(funcionarioAtualizado)
+      }),
+      tap((funcionario)=>{
+        this.atualizarFuncionariosSub$.next(true)
       })
     )
   }

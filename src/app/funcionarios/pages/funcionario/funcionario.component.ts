@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { ConfirmarDelecaoComponent } from 'src/app/confirmar-delecao/confirmar-delecao.component';
+import { MatDialog } from '@angular/material/dialog';
+
+import { BehaviorSubject } from 'rxjs';
+
 
 
 @Component({
@@ -35,7 +39,10 @@ export class FuncionarioComponent implements OnInit {
     private route: ActivatedRoute, //acessar os parâmetros da rota ativa
     private funcService: FuncionarioService,
     private formBuilder: FormBuilder,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog,
+    private router: Router,
+    
     
   ) {}
 
@@ -48,6 +55,7 @@ export class FuncionarioComponent implements OnInit {
 
     /* let idFuncionario = this.route.snapshot.paramMap.get('idFuncionario')
     console.log(idFuncionario) */
+
   }
   recuperarFoto(event: any): void {
     this.foto = event.target.files[0];
@@ -150,4 +158,35 @@ export class FuncionarioComponent implements OnInit {
     ) */
   }
 
+  deletarFuncionario(func:Funcionario): void {   
+    
+     const MatDialogRef = this.dialog.open
+
+     (ConfirmarDelecaoComponent)
+     MatDialogRef.afterClosed().subscribe(
+      deletar=> {
+        if (deletar) {
+          this.funcService.deleteFuncionario(func).subscribe(
+            () => {
+              this.snackbar.open('Funcionário deletado', 'ok', {
+                duration: 3000
+              })
+              this.router.navigateByUrl('/funcionarios')
+
+            },
+            (error) => {
+              this.snackbar.open('Não foi possível deletar o funcionário', '', {
+                duration: 3000
+              })
+              console.log(error)
+            }
+          )
+        }
+      }
+     )
+   }   
+
+   
+
 }
+
